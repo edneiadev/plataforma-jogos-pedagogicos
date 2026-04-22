@@ -11,7 +11,7 @@
       <div class="alert alert-error"><%= erro %></div>
     <% } %>
 
-    <form method="POST" action="/admin/jogo/<%= jogo.id %>/editar" enctype="multipart/form-data">
+    <form method="POST" action="/admin/jogo/<%= jogo.id %>/editar?_csrf=<%= csrfToken %>" enctype="multipart/form-data">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
         <div class="form-group">
           <label for="nome">Nome do jogo *</label>

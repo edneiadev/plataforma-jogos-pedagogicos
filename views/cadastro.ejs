@@ -19,6 +19,7 @@
 
     <% if (!sucesso) { %>
     <form method="POST" action="/cadastro" novalidate>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
       <div class="form-group">
         <label for="nome">Nome completo <span style="color:#A0006D">*</span></label>
         <input type="text" id="nome" name="nome" placeholder="Maria da Silva" required autocomplete="name" />

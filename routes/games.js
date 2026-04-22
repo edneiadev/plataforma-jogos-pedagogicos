@@ -27,7 +27,7 @@ router.get('/lista/:categoria', (req, res) => {
   if (!categoriasValidas.includes(categoria)) return res.redirect('/jogos/categorias');
 
   const jogos = db.prepare(
-    'SELECT * FROM jogos WHERE categoria = ? ORDER BY nome ASC COLLATE NOCASE'
+    'SELECT id, nome, categoria, conteudos, ano, icone_url, link_jogo FROM jogos WHERE categoria = ? ORDER BY nome ASC COLLATE NOCASE'
   ).all(categoria);
 
   const nomes = { matematica: 'Matemática', leitura: 'Leitura / Escrita' };

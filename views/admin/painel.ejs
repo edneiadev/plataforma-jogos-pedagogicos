@@ -42,11 +42,11 @@
             </div>
             <span class="status-badge status-pendente">Pendente</span>
             <div class="user-actions">
-              <form method="POST" action="/admin/usuario/<%= u.id %>/status" style="display:inline">
+              <form method="POST" action="/admin/usuario/<%= u.id %>/status" style="display:inline"><input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                 <input type="hidden" name="status" value="aprovado" />
                 <button type="submit" class="btn btn-success btn-sm">✅ Aprovar</button>
               </form>
-              <form method="POST" action="/admin/usuario/<%= u.id %>/status" style="display:inline">
+              <form method="POST" action="/admin/usuario/<%= u.id %>/status" style="display:inline"><input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                 <input type="hidden" name="status" value="rejeitado" />
                 <button type="submit" class="btn btn-danger btn-sm">❌ Rejeitar</button>
               </form>
@@ -72,12 +72,12 @@
               <%= u.status.charAt(0).toUpperCase() + u.status.slice(1) %>
             </span>
             <% if (u.status === 'aprovado') { %>
-              <form method="POST" action="/admin/usuario/<%= u.id %>/status" style="display:inline">
+              <form method="POST" action="/admin/usuario/<%= u.id %>/status" style="display:inline"><input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                 <input type="hidden" name="status" value="rejeitado" />
                 <button type="submit" class="btn btn-danger btn-sm">❌ Revogar</button>
               </form>
             <% } else if (u.status === 'rejeitado') { %>
-              <form method="POST" action="/admin/usuario/<%= u.id %>/status" style="display:inline">
+              <form method="POST" action="/admin/usuario/<%= u.id %>/status" style="display:inline"><input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                 <input type="hidden" name="status" value="aprovado" />
                 <button type="submit" class="btn btn-success btn-sm">✅ Aprovar</button>
               </form>
@@ -98,7 +98,7 @@
         <span id="toggle-icon">▼</span>
       </div>
       <div id="form-novo-jogo" style="margin-top:1.25rem">
-        <form method="POST" action="/admin/jogo/novo" enctype="multipart/form-data">
+        <form method="POST" action="/admin/jogo/novo?_csrf=<%= csrfToken %>" enctype="multipart/form-data">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
             <div class="form-group">
               <label for="nome_jogo">Nome do jogo *</label>
@@ -167,7 +167,7 @@
             <div class="user-actions">
               <a href="/admin/jogo/<%= j.id %>/editar" class="btn btn-secondary btn-sm">✏️ Editar</a>
               <form method="POST" action="/admin/jogo/<%= j.id %>/excluir" style="display:inline"
-                    onsubmit="return confirm('Excluir o jogo «<%= j.nome %>»?')">
+                    onsubmit="return confirm('Excluir o jogo «<%= j.nome %><input type="hidden" name="_csrf" value="<%= csrfToken %>" />»?')">
                 <button type="submit" class="btn btn-danger btn-sm">🗑️ Excluir</button>
               </form>
             </div>

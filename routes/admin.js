@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 const db = require('../database/db');
 const { isAdmin } = require('../middleware/auth');
 
@@ -131,7 +132,17 @@ router.post('/jogo/:id/editar', (req, res) => {
 
 // Delete game
 router.post('/jogo/:id/excluir', (req, res) => {
+  const jogo = db.prepare('SELECT id, icone_url FROM jogos WHERE id = ?').get(req.params.id);
+  if (!jogo) return res.redirect('/admin/painel?aba=jogos');
+
   db.prepare('DELETE FROM jogos WHERE id = ?').run(req.params.id);
+
+  // Remove uploaded icon file to prevent orphaned files
+  if (jogo.icone_url && jogo.icone_url.startsWith('/uploads/')) {
+    const filePath = path.join(__dirname, '../public', jogo.icone_url);
+    fs.unlink(filePath, () => {}); // Ignore errors (file may not exist)
+  }
+
   res.redirect('/admin/painel?aba=jogos&sucesso=1');
 });
 
