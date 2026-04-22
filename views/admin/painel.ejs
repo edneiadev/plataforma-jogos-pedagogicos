@@ -1,0 +1,194 @@
+<%- include('../partials/head', { title: 'Painel Administrador' }) %>
+<%- include('../partials/navbar', { user }) %>
+
+<main class="container">
+  <h1 class="page-title">⚙️ Painel do Administrador</h1>
+  <p class="page-subtitle">Gerencie professores e jogos da plataforma.</p>
+
+  <% if (erro) { %>
+    <div class="alert alert-error"><%= erro %></div>
+  <% } %>
+  <% if (sucesso) { %>
+    <div class="alert alert-success"><%= sucesso %></div>
+  <% } %>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <a href="/admin/painel?aba=usuarios" class="tab-btn <%= aba === 'usuarios' ? 'active' : '' %>">
+      👩‍🏫 Professores
+      <% if (pendentes.length > 0) { %>
+        <span style="background:#A0006D;color:#fff;border-radius:20px;padding:.1rem .5rem;font-size:.75rem;margin-left:.4rem"><%= pendentes.length %></span>
+      <% } %>
+    </a>
+    <a href="/admin/painel?aba=jogos" class="tab-btn <%= aba === 'jogos' ? 'active' : '' %>">
+      🎮 Jogos
+    </a>
+  </div>
+
+  <!-- Tab: Professores -->
+  <div class="tab-panel <%= aba === 'usuarios' ? 'active' : '' %>">
+
+    <!-- Pendentes -->
+    <div class="section-title">⏳ Aguardando Aprovação (<%= pendentes.length %>)</div>
+    <% if (pendentes.length === 0) { %>
+      <div class="alert alert-info">Nenhum cadastro pendente no momento.</div>
+    <% } else { %>
+      <ul class="user-list">
+        <% pendentes.forEach(u => { %>
+          <li class="user-item">
+            <div class="user-info">
+              <strong><%= u.nome %></strong>
+              <span><%= u.email %><% if (u.escola) { %> · <%= u.escola %><% } %></span>
+            </div>
+            <span class="status-badge status-pendente">Pendente</span>
+            <div class="user-actions">
+              <form method="POST" action="/admin/usuario/<%= u.id %>/status" style="display:inline">
+                <input type="hidden" name="status" value="aprovado" />
+                <button type="submit" class="btn btn-success btn-sm">✅ Aprovar</button>
+              </form>
+              <form method="POST" action="/admin/usuario/<%= u.id %>/status" style="display:inline">
+                <input type="hidden" name="status" value="rejeitado" />
+                <button type="submit" class="btn btn-danger btn-sm">❌ Rejeitar</button>
+              </form>
+            </div>
+          </li>
+        <% }) %>
+      </ul>
+    <% } %>
+
+    <!-- Outros professores -->
+    <div class="section-title" style="margin-top:2rem">👩‍🏫 Todos os Professores (<%= aprovados.length %>)</div>
+    <% if (aprovados.length === 0) { %>
+      <div class="empty-state"><span class="empty-icon">👤</span><p>Nenhum professor cadastrado ainda.</p></div>
+    <% } else { %>
+      <ul class="user-list">
+        <% aprovados.forEach(u => { %>
+          <li class="user-item">
+            <div class="user-info">
+              <strong><%= u.nome %></strong>
+              <span><%= u.email %><% if (u.escola) { %> · <%= u.escola %><% } %></span>
+            </div>
+            <span class="status-badge status-<%= u.status %>">
+              <%= u.status.charAt(0).toUpperCase() + u.status.slice(1) %>
+            </span>
+            <% if (u.status === 'aprovado') { %>
+              <form method="POST" action="/admin/usuario/<%= u.id %>/status" style="display:inline">
+                <input type="hidden" name="status" value="rejeitado" />
+                <button type="submit" class="btn btn-danger btn-sm">❌ Revogar</button>
+              </form>
+            <% } else if (u.status === 'rejeitado') { %>
+              <form method="POST" action="/admin/usuario/<%= u.id %>/status" style="display:inline">
+                <input type="hidden" name="status" value="aprovado" />
+                <button type="submit" class="btn btn-success btn-sm">✅ Aprovar</button>
+              </form>
+            <% } %>
+          </li>
+        <% }) %>
+      </ul>
+    <% } %>
+  </div>
+
+  <!-- Tab: Jogos -->
+  <div class="tab-panel <%= aba === 'jogos' ? 'active' : '' %>">
+
+    <!-- Add game form -->
+    <div class="card" style="margin-bottom:2rem">
+      <div class="section-title collapsible-header" id="form-toggle" style="cursor:pointer;margin-bottom:0">
+        ➕ Adicionar Novo Jogo
+        <span id="toggle-icon">▼</span>
+      </div>
+      <div id="form-novo-jogo" style="margin-top:1.25rem">
+        <form method="POST" action="/admin/jogo/novo" enctype="multipart/form-data">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+            <div class="form-group">
+              <label for="nome_jogo">Nome do jogo *</label>
+              <input type="text" id="nome_jogo" name="nome" placeholder="Ex: Tabuada Rápida" required />
+            </div>
+            <div class="form-group">
+              <label for="categoria">Categoria *</label>
+              <select id="categoria" name="categoria" required>
+                <option value="">Selecione...</option>
+                <option value="matematica">➕ Matemática</option>
+                <option value="leitura">📖 Leitura / Escrita</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="conteudos">Conteúdos trabalhados *</label>
+            <textarea id="conteudos" name="conteudos" placeholder="Ex: Multiplicação, divisão, raciocínio lógico" required></textarea>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+            <div class="form-group">
+              <label for="ano">Ano escolar *</label>
+              <input type="text" id="ano" name="ano" placeholder="Ex: 3º ao 5º ano" required />
+            </div>
+            <div class="form-group">
+              <label for="link_jogo">Link do jogo (URL) *</label>
+              <input type="url" id="link_jogo" name="link_jogo" placeholder="https://..." required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="icone">Ícone do jogo (imagem, máx. 2 MB)</label>
+            <input type="file" id="icone" name="icone" accept="image/*" />
+            <span class="form-hint">Ou informe uma URL de imagem abaixo.</span>
+          </div>
+          <div class="form-group">
+            <label for="icone_url_manual">URL da imagem (alternativa ao upload)</label>
+            <input type="url" id="icone_url_manual" name="icone_url_manual" placeholder="https://exemplo.com/icone.png" />
+          </div>
+          <button type="submit" class="btn btn-primary">Cadastrar Jogo</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Games list -->
+    <div class="section-title">📋 Jogos Cadastrados (<%= jogos.length %>)</div>
+    <% if (jogos.length === 0) { %>
+      <div class="empty-state">
+        <span class="empty-icon">🎮</span>
+        <p>Nenhum jogo cadastrado ainda. Adicione o primeiro acima!</p>
+      </div>
+    <% } else { %>
+      <ul class="jogo-admin-list">
+        <% jogos.forEach(j => { %>
+          <li class="jogo-admin-item">
+            <% if (j.icone_url) { %>
+              <img src="<%= j.icone_url %>" alt="<%= j.nome %>" class="jogo-icon" />
+            <% } else { %>
+              <div class="jogo-icon-placeholder">🎮</div>
+            <% } %>
+            <div class="jogo-admin-info">
+              <strong><%= j.nome %></strong>
+              <span><%= j.conteudos %> · <%= j.ano %></span>
+            </div>
+            <span class="cat-badge cat-<%= j.categoria %>">
+              <%= j.categoria === 'matematica' ? '➕ Matemática' : '📖 Leitura' %>
+            </span>
+            <div class="user-actions">
+              <a href="/admin/jogo/<%= j.id %>/editar" class="btn btn-secondary btn-sm">✏️ Editar</a>
+              <form method="POST" action="/admin/jogo/<%= j.id %>/excluir" style="display:inline"
+                    onsubmit="return confirm('Excluir o jogo «<%= j.nome %>»?')">
+                <button type="submit" class="btn btn-danger btn-sm">🗑️ Excluir</button>
+              </form>
+            </div>
+          </li>
+        <% }) %>
+      </ul>
+    <% } %>
+
+  </div><!-- /tab jogos -->
+</main>
+
+<script>
+  // Collapsible form
+  const toggle = document.getElementById('form-toggle');
+  const form   = document.getElementById('form-novo-jogo');
+  const icon   = document.getElementById('toggle-icon');
+  toggle.addEventListener('click', () => {
+    const hidden = form.style.display === 'none';
+    form.style.display = hidden ? 'block' : 'none';
+    icon.textContent = hidden ? '▲' : '▼';
+  });
+</script>
+
+<%- include('../partials/footer') %>

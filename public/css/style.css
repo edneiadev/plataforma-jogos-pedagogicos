@@ -1,0 +1,537 @@
+/* ================================================
+   PALETA DE CORES
+   Azul claro  : #EFFAFD  – fundo geral
+   Azul royal  : #4A8BDF  – header / títulos
+   Berinjela   : #A0006D  – botões / ações
+   ================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #EFFAFD;
+  color: #2d2d2d;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── HEADER / NAV ── */
+header {
+  background: #4A8BDF;
+  color: #fff;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 64px;
+  box-shadow: 0 2px 8px rgba(74,139,223,.3);
+}
+
+header .brand {
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+header nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+header nav a {
+  color: #e8f4ff;
+  text-decoration: none;
+  font-size: .95rem;
+  padding: .35rem .75rem;
+  border-radius: 6px;
+  transition: background .2s;
+}
+
+header nav a:hover { background: rgba(255,255,255,.18); }
+
+header nav .btn-logout {
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.4);
+}
+
+/* ── CONTAINER ── */
+.container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-block;
+  padding: .55rem 1.4rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: .95rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background .2s, transform .1s;
+}
+
+.btn:active { transform: scale(.97); }
+
+.btn-primary {
+  background: #A0006D;
+  color: #fff;
+}
+.btn-primary:hover { background: #800057; }
+
+.btn-secondary {
+  background: #4A8BDF;
+  color: #fff;
+}
+.btn-secondary:hover { background: #3373c4; }
+
+.btn-danger {
+  background: #c0392b;
+  color: #fff;
+}
+.btn-danger:hover { background: #a93226; }
+
+.btn-success {
+  background: #27ae60;
+  color: #fff;
+}
+.btn-success:hover { background: #1e8449; }
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid #A0006D;
+  color: #A0006D;
+}
+.btn-outline:hover { background: #A0006D; color: #fff; }
+
+.btn-sm { padding: .35rem .9rem; font-size: .85rem; }
+
+/* ── ALERTS ── */
+.alert {
+  padding: .85rem 1.25rem;
+  border-radius: 8px;
+  margin-bottom: 1.25rem;
+  font-size: .95rem;
+}
+.alert-error { background: #fde8e8; color: #b91c1c; border-left: 4px solid #ef4444; }
+.alert-success { background: #d1fae5; color: #065f46; border-left: 4px solid #10b981; }
+.alert-info { background: #dbeafe; color: #1e40af; border-left: 4px solid #3b82f6; }
+
+/* ── FORMS ── */
+.form-group { margin-bottom: 1.1rem; }
+
+label {
+  display: block;
+  font-size: .9rem;
+  font-weight: 600;
+  margin-bottom: .4rem;
+  color: #444;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="url"],
+select,
+textarea {
+  width: 100%;
+  padding: .6rem .9rem;
+  border: 1.5px solid #b8dff5;
+  border-radius: 8px;
+  font-size: .95rem;
+  background: #fff;
+  transition: border-color .2s;
+  color: #2d2d2d;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #4A8BDF;
+  box-shadow: 0 0 0 3px rgba(74,139,223,.15);
+}
+
+textarea { resize: vertical; min-height: 80px; }
+
+.form-hint { font-size: .8rem; color: #888; margin-top: .3rem; }
+
+/* ── CARDS ── */
+.card {
+  background: #fff;
+  border: 1px solid #B8DFF5;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(74,139,223,.07);
+}
+
+/* ── LANDING PAGE ── */
+.landing {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+}
+
+.landing-inner {
+  display: flex;
+  gap: 3rem;
+  max-width: 960px;
+  width: 100%;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.landing-hero {
+  flex: 1;
+  min-width: 260px;
+}
+
+.landing-hero h1 {
+  font-size: 2rem;
+  color: #4A8BDF;
+  line-height: 1.25;
+  margin-bottom: .75rem;
+}
+
+.landing-hero p {
+  color: #555;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.category-badges {
+  display: flex;
+  gap: .75rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .6rem 1.1rem;
+  border-radius: 40px;
+  font-size: .9rem;
+  font-weight: 600;
+  background: #fff;
+  border: 2px solid #B8DFF5;
+  color: #4A8BDF;
+}
+
+.badge .icon { font-size: 1.2rem; }
+
+.login-card {
+  flex: 0 0 340px;
+  min-width: 280px;
+}
+
+.login-card h2 { color: #4A8BDF; margin-bottom: 1.25rem; font-size: 1.3rem; }
+
+.login-divider {
+  text-align: center;
+  margin: 1rem 0;
+  color: #aaa;
+  font-size: .85rem;
+  position: relative;
+}
+
+.login-divider::before, .login-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 38%;
+  height: 1px;
+  background: #ddd;
+}
+.login-divider::before { left: 0; }
+.login-divider::after { right: 0; }
+
+/* ── ADMIN TABS ── */
+.tabs {
+  display: flex;
+  gap: .25rem;
+  margin-bottom: 1.75rem;
+  border-bottom: 2px solid #B8DFF5;
+}
+
+.tab-btn {
+  padding: .6rem 1.4rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #888;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: color .2s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.tab-btn:hover { color: #4A8BDF; }
+.tab-btn.active { color: #A0006D; border-bottom-color: #A0006D; }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── USER LIST ── */
+.user-list { list-style: none; }
+
+.user-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: .9rem 1rem;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid #B8DFF5;
+  margin-bottom: .75rem;
+  flex-wrap: wrap;
+}
+
+.user-item .user-info { flex: 1; min-width: 180px; }
+.user-item .user-info strong { display: block; color: #2d2d2d; }
+.user-item .user-info span { font-size: .83rem; color: #777; }
+
+.status-badge {
+  display: inline-block;
+  padding: .2rem .75rem;
+  border-radius: 20px;
+  font-size: .8rem;
+  font-weight: 700;
+}
+.status-pendente { background: #fff3cd; color: #856404; }
+.status-aprovado { background: #d1fae5; color: #065f46; }
+.status-rejeitado { background: #fee2e2; color: #991b1b; }
+
+.user-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+
+/* ── GAME LIST (admin) ── */
+.jogo-admin-list { list-style: none; }
+
+.jogo-admin-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: .9rem 1rem;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid #B8DFF5;
+  margin-bottom: .75rem;
+  flex-wrap: wrap;
+}
+
+.jogo-admin-item img.jogo-icon {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid #e0effe;
+  background: #f5f5f5;
+}
+
+.jogo-icon-placeholder {
+  width: 52px;
+  height: 52px;
+  background: #EFFAFD;
+  border: 1px dashed #B8DFF5;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.jogo-admin-info { flex: 1; min-width: 160px; }
+.jogo-admin-info strong { display: block; color: #2d2d2d; }
+.jogo-admin-info span { font-size: .83rem; color: #777; }
+
+.cat-badge {
+  display: inline-block;
+  padding: .2rem .7rem;
+  border-radius: 20px;
+  font-size: .78rem;
+  font-weight: 700;
+}
+.cat-matematica { background: #e0f2fe; color: #0369a1; }
+.cat-leitura { background: #fce7f3; color: #9d174d; }
+
+/* ── CATEGORY OVERVIEW ── */
+.categoria-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.categoria-card {
+  background: #fff;
+  border: 2px solid #B8DFF5;
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow .2s, border-color .2s, transform .15s;
+  display: block;
+}
+
+.categoria-card:hover {
+  box-shadow: 0 8px 24px rgba(74,139,223,.15);
+  border-color: #4A8BDF;
+  transform: translateY(-3px);
+}
+
+.categoria-card .cat-icon { font-size: 3.5rem; margin-bottom: 1rem; display: block; }
+.categoria-card h2 { color: #4A8BDF; font-size: 1.4rem; margin-bottom: .5rem; }
+.categoria-card .count { color: #888; font-size: .9rem; }
+
+/* ── GAME CARDS (professor) ── */
+.jogo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.jogo-card {
+  background: #fff;
+  border: 1.5px solid #B8DFF5;
+  border-radius: 14px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+  box-shadow: 0 2px 8px rgba(74,139,223,.06);
+  transition: box-shadow .2s, transform .15s;
+}
+
+.jogo-card:hover {
+  box-shadow: 0 6px 20px rgba(74,139,223,.15);
+  transform: translateY(-2px);
+}
+
+.jogo-card-header {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+}
+
+.jogo-card-header img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  border-radius: 10px;
+  border: 1px solid #e0effe;
+  background: #f9fbff;
+}
+
+.jogo-card-header .no-icon {
+  width: 56px;
+  height: 56px;
+  background: #EFFAFD;
+  border: 1.5px dashed #B8DFF5;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+}
+
+.jogo-card-header h3 {
+  font-size: 1.05rem;
+  color: #2d2d2d;
+  line-height: 1.3;
+}
+
+.jogo-meta { font-size: .85rem; color: #555; line-height: 1.5; }
+.jogo-meta strong { color: #333; }
+
+.jogo-card-footer { margin-top: auto; }
+
+/* ── PAGE TITLES ── */
+.page-title {
+  color: #4A8BDF;
+  font-size: 1.6rem;
+  margin-bottom: .5rem;
+}
+
+.page-subtitle { color: #777; margin-bottom: 1.5rem; font-size: .95rem; }
+
+/* ── SECTION TITLES ── */
+.section-title {
+  font-size: 1.1rem;
+  color: #4A8BDF;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  padding-bottom: .4rem;
+  border-bottom: 2px solid #B8DFF5;
+}
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #aaa;
+}
+.empty-state .empty-icon { font-size: 3rem; display: block; margin-bottom: .75rem; }
+.empty-state p { font-size: .95rem; }
+
+/* ── BACK LINK ── */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  color: #4A8BDF;
+  text-decoration: none;
+  font-size: .9rem;
+  margin-bottom: 1.25rem;
+  font-weight: 600;
+}
+.back-link:hover { text-decoration: underline; }
+
+/* ── FOOTER ── */
+footer {
+  text-align: center;
+  padding: 1.25rem;
+  font-size: .8rem;
+  color: #aaa;
+  border-top: 1px solid #d9eeff;
+  margin-top: auto;
+}
+
+/* ── FORM CARD ── */
+.form-card {
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+/* ── COLLAPSIBLE FORM (admin add game) ── */
+.collapsible-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
+  .landing-inner { flex-direction: column; gap: 2rem; }
+  .login-card { flex: 0 0 auto; width: 100%; }
+  .landing-hero h1 { font-size: 1.5rem; }
+  header { padding: 0 1rem; }
+  .container { padding: 1.25rem 1rem; }
+}

@@ -1,0 +1,55 @@
+<%- include('partials/head', { title: 'Entrar' }) %>
+<%- include('partials/navbar', { user: null }) %>
+
+<main class="landing">
+  <div class="landing-inner">
+
+    <!-- Hero -->
+    <div class="landing-hero">
+      <h1>Aprenda brincando com os melhores jogos pedagógicos!</h1>
+      <p>
+        Uma plataforma pensada para professores, com jogos educativos organizados
+        por categoria para facilitar o uso em sala de aula.
+      </p>
+      <div class="category-badges">
+        <span class="badge"><span class="icon">➕</span> Matemática</span>
+        <span class="badge"><span class="icon">📖</span> Leitura / Escrita</span>
+      </div>
+      <p style="font-size:.9rem;color:#888;">
+        Novo por aqui?
+        <a href="/cadastro" style="color:#A0006D;font-weight:600;">Cadastre-se como professor</a>
+        e aguarde a aprovação do administrador.
+      </p>
+    </div>
+
+    <!-- Login Card -->
+    <div class="card login-card">
+      <h2>Entrar na Plataforma</h2>
+
+      <% if (erro) { %>
+        <div class="alert alert-error"><%= erro %></div>
+      <% } %>
+
+      <form method="POST" action="/login" novalidate>
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" name="email" placeholder="seu@email.com" required autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label for="senha">Senha</label>
+          <input type="password" id="senha" name="senha" placeholder="••••••••" required autocomplete="current-password" />
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%">Entrar</button>
+      </form>
+
+      <div class="login-divider">ou</div>
+
+      <a href="/cadastro" class="btn btn-outline" style="width:100%;text-align:center;display:block">
+        Cadastrar como Professor
+      </a>
+    </div>
+
+  </div>
+</main>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,37 @@
+<%- include('../partials/head', { title: 'Categorias de Jogos' }) %>
+<%- include('../partials/navbar', { user }) %>
+
+<main class="container">
+  <h1 class="page-title">📚 Categorias de Jogos</h1>
+  <p class="page-subtitle">Escolha uma categoria para ver os jogos disponíveis.</p>
+
+  <div class="categoria-grid">
+
+    <a href="/jogos/lista/matematica" class="categoria-card">
+      <span class="cat-icon">➕</span>
+      <h2>Matemática</h2>
+      <p class="count">
+        <% if (contagemMatematica === 1) { %>
+          1 jogo disponível
+        <% } else { %>
+          <%= contagemMatematica %> jogos disponíveis
+        <% } %>
+      </p>
+    </a>
+
+    <a href="/jogos/lista/leitura" class="categoria-card">
+      <span class="cat-icon">📖</span>
+      <h2>Leitura / Escrita</h2>
+      <p class="count">
+        <% if (contagemLeitura === 1) { %>
+          1 jogo disponível
+        <% } else { %>
+          <%= contagemLeitura %> jogos disponíveis
+        <% } %>
+      </p>
+    </a>
+
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

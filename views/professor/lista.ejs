@@ -1,0 +1,55 @@
+<%- include('../partials/head', { title: categoriaNome }) %>
+<%- include('../partials/navbar', { user }) %>
+
+<main class="container">
+  <a href="/jogos/categorias" class="back-link">← Voltar às categorias</a>
+
+  <h1 class="page-title">
+    <%= categoria === 'matematica' ? '➕' : '📖' %>
+    <%= categoriaNome %>
+  </h1>
+  <p class="page-subtitle">
+    Jogos listados em ordem alfabética ·
+    <strong><%= jogos.length %></strong>
+    <%= jogos.length === 1 ? 'jogo disponível' : 'jogos disponíveis' %>
+  </p>
+
+  <% if (jogos.length === 0) { %>
+    <div class="empty-state">
+      <span class="empty-icon">🎮</span>
+      <p>Nenhum jogo cadastrado nessa categoria ainda.</p>
+      <p style="margin-top:.5rem;font-size:.85rem">
+        Entre em contato com o administrador para adicionar jogos.
+      </p>
+    </div>
+  <% } else { %>
+    <div class="jogo-grid">
+      <% jogos.forEach(jogo => { %>
+        <div class="jogo-card">
+          <div class="jogo-card-header">
+            <% if (jogo.icone_url) { %>
+              <img src="<%= jogo.icone_url %>" alt="<%= jogo.nome %>" />
+            <% } else { %>
+              <div class="no-icon">🎮</div>
+            <% } %>
+            <h3><%= jogo.nome %></h3>
+          </div>
+
+          <div class="jogo-meta">
+            <p><strong>📚 Conteúdos:</strong> <%= jogo.conteudos %></p>
+            <p><strong>🎯 Ano escolar:</strong> <%= jogo.ano %></p>
+          </div>
+
+          <div class="jogo-card-footer">
+            <a href="<%= jogo.link_jogo %>" target="_blank" rel="noopener noreferrer"
+               class="btn btn-primary" style="width:100%;text-align:center;display:block">
+              ▶️ Jogar
+            </a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</main>
+
+<%- include('../partials/footer') %>

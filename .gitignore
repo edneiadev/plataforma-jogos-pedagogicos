@@ -1,0 +1,4 @@
+node_modules/
+database/plataforma.db
+uploads/
+!uploads/.gitkeep
