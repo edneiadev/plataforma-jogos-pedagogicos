@@ -1,9 +1,27 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
+const rateLimit = require('express-rate-limit');
 const db = require('../database/db');
 
-// Landing / redirect
+// ── Rate limiters applied directly to handlers ─────────────────
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: 'Muitas tentativas de login. Tente novamente em 15 minutos.'
+});
+
+const registerLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: 'Muitas tentativas de cadastro. Tente novamente em 1 hora.'
+});
+
+// ── Landing / redirect ─────────────────────────────────────────
 router.get('/', (req, res) => {
   if (req.session.user) {
     if (req.session.user.tipo === 'admin') return res.redirect('/admin/painel');
@@ -12,13 +30,13 @@ router.get('/', (req, res) => {
   res.render('index', { erro: null });
 });
 
-// Login page
+// ── Login ──────────────────────────────────────────────────────
 router.get('/login', (req, res) => {
   if (req.session.user) return res.redirect('/');
   res.render('index', { erro: null });
 });
 
-router.post('/login', (req, res) => {
+router.post('/login', loginLimiter, (req, res) => {
   const { email, senha } = req.body;
 
   if (!email || !senha) {
@@ -51,12 +69,12 @@ router.post('/login', (req, res) => {
   res.redirect('/jogos/categorias');
 });
 
-// Registration page
+// ── Registration ───────────────────────────────────────────────
 router.get('/cadastro', (req, res) => {
   res.render('cadastro', { erro: null, sucesso: null });
 });
 
-router.post('/cadastro', (req, res) => {
+router.post('/cadastro', registerLimiter, (req, res) => {
   const { nome, email, senha, escola } = req.body;
 
   if (!nome || !email || !senha) {
@@ -84,7 +102,7 @@ router.post('/cadastro', (req, res) => {
   });
 });
 
-// Logout
+// ── Logout ─────────────────────────────────────────────────────
 router.get('/logout', (req, res) => {
   req.session.destroy(() => res.redirect('/'));
 });

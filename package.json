@@ -1,7 +1,7 @@
 {
   "name": "plataforma-jogos-pedagogicos",
   "version": "1.0.0",
-  "description": "Plataforma de jogos pedagógicos de Matemática e Língua Português",
+  "description": "Plataforma de jogos pedagógicos de Matemática e Língua Portuguesa",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
