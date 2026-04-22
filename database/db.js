@@ -1,12 +1,29 @@
-const Database = require('better-sqlite3');
+const { Database: _Database } = require('node-sqlite3-wasm');
 const bcrypt = require('bcryptjs');
 const path = require('path');
 
 const DB_PATH = path.join(__dirname, 'plataforma.db');
-const db = new Database(DB_PATH);
+const _db = new _Database(DB_PATH);
+
+// Thin compatibility wrapper: node-sqlite3-wasm requires params as an array,
+// while better-sqlite3 (the original dependency) accepts variadic arguments.
+// This adapter normalises both call styles so no route files need to change.
+function wrapStatement(stmt) {
+  return {
+    run:  (...args) => stmt.run(args.length === 1 && Array.isArray(args[0]) ? args[0] : args),
+    get:  (...args) => stmt.get(args.length === 1 && Array.isArray(args[0]) ? args[0] : args),
+    all:  (...args) => stmt.all(args.length === 1 && Array.isArray(args[0]) ? args[0] : args),
+  };
+}
+
+const db = {
+  exec:    (sql)  => _db.exec(sql),
+  prepare: (sql)  => wrapStatement(_db.prepare(sql)),
+  close:   ()     => _db.close(),
+};
 
 // Enable WAL mode for better concurrency
-db.pragma('journal_mode = WAL');
+db.exec('PRAGMA journal_mode = WAL');
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS usuarios (
