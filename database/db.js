@@ -60,4 +60,44 @@ if (!adminExists) {
   console.log('Admin padrão criado: admin@plataforma.com / admin123');
 }
 
+const jogosMatematicaIniciais = [
+  {
+    nome: 'aventura-em-marte',
+    conteudos: 'Matemática',
+    ano: 'Ensino Fundamental',
+    link_jogo: 'https://www.escolagames.com.br/jogos/aventura-em-marte/'
+  },
+  {
+    nome: 'o-dia-que-o-tempo-parou',
+    conteudos: 'Matemática',
+    ano: 'Ensino Fundamental',
+    link_jogo: 'https://www.escolagames.com.br/jogos/o-dia-que-o-tempo-parou/'
+  },
+  {
+    nome: 'a-casa-abandonada',
+    conteudos: 'Matemática',
+    ano: 'Ensino Fundamental',
+    link_jogo: 'https://www.escolagames.com.br/jogos/a-casa-abandonada/'
+  }
+];
+
+const jogoExisteStmt = db.prepare('SELECT id FROM jogos WHERE nome = ? AND categoria = ?');
+const inserirJogoStmt = db.prepare(
+  'INSERT INTO jogos (nome, categoria, conteudos, ano, icone_url, link_jogo) VALUES (?, ?, ?, ?, ?, ?)'
+);
+
+jogosMatematicaIniciais.forEach((jogo) => {
+  const existe = jogoExisteStmt.get(jogo.nome, 'matematica');
+  if (!existe) {
+    inserirJogoStmt.run(
+      jogo.nome,
+      'matematica',
+      jogo.conteudos,
+      jogo.ano,
+      null,
+      jogo.link_jogo
+    );
+  }
+});
+
 module.exports = db;
