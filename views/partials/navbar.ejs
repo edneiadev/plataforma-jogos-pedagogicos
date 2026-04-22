@@ -1,0 +1,17 @@
+<header>
+  <a href="/" class="brand">🎮 Jogos Pedagógicos</a>
+  <nav>
+    <% if (typeof user !== 'undefined' && user) { %>
+      <% if (user.tipo === 'admin') { %>
+        <a href="/admin/painel">Painel Admin</a>
+      <% } else { %>
+        <a href="/jogos/categorias">Categorias</a>
+      <% } %>
+      <span style="color:#cde;font-size:.85rem">Olá, <%= user.nome.split(' ')[0] %></span>
+      <a href="/logout" class="btn-logout">Sair</a>
+    <% } else { %>
+      <a href="/login">Entrar</a>
+      <a href="/cadastro">Cadastrar</a>
+    <% } %>
+  </nav>
+</header>

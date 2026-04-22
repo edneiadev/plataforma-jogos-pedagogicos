@@ -1,0 +1,50 @@
+<%- include('partials/head', { title: 'Cadastro de Professor' }) %>
+<%- include('partials/navbar', { user: null }) %>
+
+<main class="container" style="max-width:560px">
+  <a href="/" class="back-link">← Voltar ao início</a>
+
+  <div class="card">
+    <h1 class="page-title" style="font-size:1.4rem">📝 Cadastro de Professor</h1>
+    <p class="page-subtitle">
+      Após o cadastro, seu acesso passará por análise e será aprovado pelo administrador.
+    </p>
+
+    <% if (erro) { %>
+      <div class="alert alert-error"><%= erro %></div>
+    <% } %>
+    <% if (sucesso) { %>
+      <div class="alert alert-success"><%= sucesso %></div>
+    <% } %>
+
+    <% if (!sucesso) { %>
+    <form method="POST" action="/cadastro" novalidate>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+      <div class="form-group">
+        <label for="nome">Nome completo <span style="color:#A0006D">*</span></label>
+        <input type="text" id="nome" name="nome" placeholder="Maria da Silva" required autocomplete="name" />
+      </div>
+      <div class="form-group">
+        <label for="email">E-mail <span style="color:#A0006D">*</span></label>
+        <input type="email" id="email" name="email" placeholder="seu@email.com" required autocomplete="email" />
+      </div>
+      <div class="form-group">
+        <label for="senha">Senha <span style="color:#A0006D">*</span></label>
+        <input type="password" id="senha" name="senha" placeholder="Mínimo 6 caracteres" required autocomplete="new-password" minlength="6" />
+        <span class="form-hint">Mínimo 6 caracteres.</span>
+      </div>
+      <div class="form-group">
+        <label for="escola">Escola (opcional)</label>
+        <input type="text" id="escola" name="escola" placeholder="Nome da sua escola" autocomplete="organization" />
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%">Enviar Cadastro</button>
+    </form>
+    <% } %>
+
+    <p style="text-align:center;margin-top:1.25rem;font-size:.9rem;color:#777">
+      Já tem conta? <a href="/login" style="color:#A0006D;font-weight:600">Entrar</a>
+    </p>
+  </div>
+</main>
+
+<%- include('partials/footer') %>
