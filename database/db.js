@@ -86,18 +86,25 @@ const inserirJogoStmt = db.prepare(
   'INSERT INTO jogos (nome, categoria, conteudos, ano, icone_url, link_jogo) VALUES (?, ?, ?, ?, ?, ?)'
 );
 
-jogosMatematicaIniciais.forEach((jogo) => {
-  const existe = jogoExisteStmt.get(jogo.nome, 'matematica');
-  if (!existe) {
-    inserirJogoStmt.run(
-      jogo.nome,
-      'matematica',
-      jogo.conteudos,
-      jogo.ano,
-      null,
-      jogo.link_jogo
-    );
-  }
-});
+try {
+  db.exec('BEGIN');
+  jogosMatematicaIniciais.forEach((jogo) => {
+    const existe = jogoExisteStmt.get(jogo.nome, 'matematica');
+    if (!existe) {
+      inserirJogoStmt.run(
+        jogo.nome,
+        'matematica',
+        jogo.conteudos,
+        jogo.ano,
+        null,
+        jogo.link_jogo
+      );
+    }
+  });
+  db.exec('COMMIT');
+} catch (error) {
+  db.exec('ROLLBACK');
+  console.error('Erro ao inserir jogos iniciais de matemática:', error);
+}
 
 module.exports = db;
