@@ -5,7 +5,7 @@ const path = require('path');
 const DB_PATH = path.join(__dirname, 'plataforma.db');
 const _db = new _Database(DB_PATH);
 
-function isDatabaseLockedError(error) {
+function looksLikeDatabaseLockError(error) {
   return error && /database is locked/i.test(error.message || '');
 }
 
@@ -30,7 +30,7 @@ const db = {
 try {
   db.exec('PRAGMA busy_timeout = 5000');
 } catch (e) {
-  if (!isDatabaseLockedError(e)) throw e;
+  if (!looksLikeDatabaseLockError(e)) throw e;
 }
 
 // Enable WAL mode for better concurrency
@@ -123,12 +123,11 @@ try {
     );
 
     jogosMatematicaIniciais.forEach((jogo) => {
-      const categoria = 'matematica';
-      const existe = jogoExisteStmt.get(jogo.nome, categoria);
+      const existe = jogoExisteStmt.get(jogo.nome, 'matematica');
       if (!existe) {
         inserirJogoStmt.run(
           jogo.nome,
-          categoria,
+          'matematica',
           jogo.conteudos,
           jogo.ano,
           null,
@@ -143,12 +142,14 @@ try {
     if (transactionOpen) {
       try {
         db.exec('ROLLBACK');
-      } catch (_) {}
+      } catch (rollbackError) {
+        console.warn('Falha ao executar ROLLBACK durante inicialização:', rollbackError.message);
+      }
     }
     throw seedError;
   }
 } catch (error) {
-  if (isDatabaseLockedError(error)) {
+  if (looksLikeDatabaseLockError(error)) {
     console.warn('Banco SQLite bloqueado na inicialização; etapas de schema/seed foram ignoradas nesta inicialização.');
   } else {
     throw error;
