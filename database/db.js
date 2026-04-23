@@ -98,15 +98,16 @@ const inserirJogoSeNaoExisteStmt = db.prepare(`
 
 try {
   jogosMatematicaIniciais.forEach((jogo) => {
+    const categoria = 'matematica';
     inserirJogoSeNaoExisteStmt.run(
       jogo.nome,
-      'matematica',
+      categoria,
       jogo.conteudos,
       jogo.ano,
       null,
       jogo.link_jogo,
       jogo.nome,
-      'matematica'
+      categoria
     );
   });
 } catch (error) {
