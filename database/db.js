@@ -88,29 +88,28 @@ const jogosMatematicaIniciais = [
   }
 ];
 
-const jogoExisteStmt = db.prepare('SELECT id FROM jogos WHERE nome = ? AND categoria = ?');
-const inserirJogoStmt = db.prepare(
-  'INSERT INTO jogos (nome, categoria, conteudos, ano, icone_url, link_jogo) VALUES (?, ?, ?, ?, ?, ?)'
-);
+const inserirJogoSeNaoExisteStmt = db.prepare(`
+  INSERT INTO jogos (nome, categoria, conteudos, ano, icone_url, link_jogo)
+  SELECT ?, ?, ?, ?, ?, ?
+  WHERE NOT EXISTS (
+    SELECT 1 FROM jogos WHERE nome = ? AND categoria = ?
+  )
+`);
 
 try {
-  db.exec('BEGIN');
   jogosMatematicaIniciais.forEach((jogo) => {
-    const existe = jogoExisteStmt.get(jogo.nome, 'matematica');
-    if (!existe) {
-      inserirJogoStmt.run(
-        jogo.nome,
-        'matematica',
-        jogo.conteudos,
-        jogo.ano,
-        null,
-        jogo.link_jogo
-      );
-    }
+    inserirJogoSeNaoExisteStmt.run(
+      jogo.nome,
+      'matematica',
+      jogo.conteudos,
+      jogo.ano,
+      null,
+      jogo.link_jogo,
+      jogo.nome,
+      'matematica'
+    );
   });
-  db.exec('COMMIT');
 } catch (error) {
-  db.exec('ROLLBACK');
   console.error('Erro ao inserir jogos iniciais de matemática:', error);
 }
 
