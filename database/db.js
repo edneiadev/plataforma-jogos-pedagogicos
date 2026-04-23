@@ -1,8 +1,26 @@
 const { Database: _Database } = require('node-sqlite3-wasm');
 const bcrypt = require('bcryptjs');
+const fs = require('fs');
 const path = require('path');
 
 const DB_PATH = path.join(__dirname, 'plataforma.db');
+
+// node-sqlite3-wasm simulates file locking with a directory named <db>.lock.
+// If the process crashes that directory is never removed, causing the next
+// startup to fail with "database is locked".  Remove it here so a clean boot
+// is always possible.  If another process genuinely holds the lock it will
+// re-create the directory immediately and subsequent DB operations will fail
+// with a proper error rather than an unrecoverable crash at startup.
+const LOCK_PATH = `${DB_PATH}.lock`;
+if (fs.existsSync(LOCK_PATH)) {
+  try {
+    fs.rmdirSync(LOCK_PATH);
+    console.warn('Stale database lock removed (previous process may have crashed). If another server instance is running, stop it first.');
+  } catch (e) {
+    console.warn('Could not remove stale database lock:', e.message);
+  }
+}
+
 const _db = new _Database(DB_PATH);
 
 function looksLikeDatabaseLockError(error) {
