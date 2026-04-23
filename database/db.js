@@ -5,22 +5,6 @@ const path = require('path');
 const DB_PATH = path.join(__dirname, 'plataforma.db');
 const _db = new _Database(DB_PATH);
 
-function sleep(ms) {
-  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
-}
-
-function execWithRetry(sql, attempts = 20, delayMs = 100) {
-  for (let attempt = 1; attempt <= attempts; attempt += 1) {
-    try {
-      return _db.exec(sql);
-    } catch (error) {
-      const locked = error && /database is locked/i.test(error.message || '');
-      if (!locked || attempt === attempts) throw error;
-      sleep(delayMs * attempt);
-    }
-  }
-}
-
 function isDatabaseLockedError(error) {
   return error && /database is locked/i.test(error.message || '');
 }
@@ -37,13 +21,17 @@ function wrapStatement(stmt) {
 }
 
 const db = {
-  exec:    (sql)  => execWithRetry(sql),
+  exec:    (sql)  => _db.exec(sql),
   prepare: (sql)  => wrapStatement(_db.prepare(sql)),
   close:   ()     => _db.close(),
 };
 
 // Wait up to 5 s if another process holds the DB lock
-db.exec('PRAGMA busy_timeout = 5000');
+try {
+  db.exec('PRAGMA busy_timeout = 5000');
+} catch (e) {
+  if (!isDatabaseLockedError(e)) throw e;
+}
 
 // Enable WAL mode for better concurrency
 try {
@@ -59,7 +47,10 @@ function tableExists(name) {
 }
 
 try {
-  if (!tableExists('usuarios') || !tableExists('jogos')) {
+  const hasUsuarios = tableExists('usuarios');
+  const hasJogos = tableExists('jogos');
+
+  if (!hasUsuarios) {
     db.exec(`
       CREATE TABLE IF NOT EXISTS usuarios (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -71,7 +62,11 @@ try {
         status TEXT NOT NULL DEFAULT 'pendente',
         criado_em DATETIME DEFAULT CURRENT_TIMESTAMP
       );
+    `);
+  }
 
+  if (!hasJogos) {
+    db.exec(`
       CREATE TABLE IF NOT EXISTS jogos (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nome TEXT NOT NULL,
