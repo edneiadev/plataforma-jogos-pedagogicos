@@ -143,14 +143,14 @@ try {
       try {
         db.exec('ROLLBACK');
       } catch (rollbackError) {
-        console.warn('Falha ao executar ROLLBACK durante inicialização:', rollbackError.message);
+        console.warn('Falha ao executar o ROLLBACK durante inicialização:', rollbackError.message);
       }
     }
     throw seedError;
   }
 } catch (error) {
   if (looksLikeDatabaseLockError(error)) {
-    console.warn('Banco SQLite bloqueado na inicialização; etapas de schema/seed foram ignoradas nesta inicialização.');
+    console.warn('Banco SQLite bloqueado na inicialização; etapas de schema/seed foram ignoradas nesta inicialização. A aplicação continua, mas dados iniciais podem ficar pendentes até a próxima inicialização.');
   } else {
     throw error;
   }
