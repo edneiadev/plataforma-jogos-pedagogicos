@@ -80,60 +80,76 @@ try {
     `);
   }
 
-  // Seed default admin if not exists
-  const adminEmail = 'admin@plataforma.com';
-  const adminExists = db.prepare('SELECT id FROM usuarios WHERE email = ?').get(adminEmail);
-  if (!adminExists) {
-    const hash = bcrypt.hashSync('admin123', 10);
-    db.prepare(
-      'INSERT INTO usuarios (nome, email, senha, tipo, status) VALUES (?, ?, ?, ?, ?)'
-    ).run('Administrador', adminEmail, hash, 'admin', 'aprovado');
-    console.log('Admin padrão criado: admin@plataforma.com / admin123');
+  let transactionOpen = false;
+  try {
+    db.exec('BEGIN');
+    transactionOpen = true;
+
+    // Seed default admin if not exists
+    const adminEmail = 'admin@plataforma.com';
+    const adminExists = db.prepare('SELECT id FROM usuarios WHERE email = ?').get(adminEmail);
+    if (!adminExists) {
+      const hash = bcrypt.hashSync('admin123', 10);
+      db.prepare(
+        'INSERT INTO usuarios (nome, email, senha, tipo, status) VALUES (?, ?, ?, ?, ?)'
+      ).run('Administrador', adminEmail, hash, 'admin', 'aprovado');
+      console.log('Admin padrão criado: admin@plataforma.com / admin123');
+    }
+
+    const jogosMatematicaIniciais = [
+      {
+        nome: 'aventura-em-marte',
+        conteudos: 'Matemática',
+        ano: 'Ensino Fundamental',
+        link_jogo: 'https://www.escolagames.com.br/jogos/aventura-em-marte/'
+      },
+      {
+        nome: 'o-dia-que-o-tempo-parou',
+        conteudos: 'Matemática',
+        ano: 'Ensino Fundamental',
+        link_jogo: 'https://www.escolagames.com.br/jogos/o-dia-que-o-tempo-parou/'
+      },
+      {
+        nome: 'a-casa-abandonada',
+        conteudos: 'Matemática',
+        ano: 'Ensino Fundamental',
+        link_jogo: 'https://www.escolagames.com.br/jogos/a-casa-abandonada/'
+      }
+    ];
+
+    const jogoExisteStmt = db.prepare('SELECT id FROM jogos WHERE nome = ? AND categoria = ?');
+    const inserirJogoStmt = db.prepare(
+      'INSERT INTO jogos (nome, categoria, conteudos, ano, icone_url, link_jogo) VALUES (?, ?, ?, ?, ?, ?)'
+    );
+
+    jogosMatematicaIniciais.forEach((jogo) => {
+      const categoria = 'matematica';
+      const existe = jogoExisteStmt.get(jogo.nome, categoria);
+      if (!existe) {
+        inserirJogoStmt.run(
+          jogo.nome,
+          categoria,
+          jogo.conteudos,
+          jogo.ano,
+          null,
+          jogo.link_jogo
+        );
+      }
+    });
+
+    db.exec('COMMIT');
+    transactionOpen = false;
+  } catch (seedError) {
+    if (transactionOpen) {
+      try {
+        db.exec('ROLLBACK');
+      } catch (_) {}
+    }
+    throw seedError;
   }
-
-  const jogosMatematicaIniciais = [
-    {
-      nome: 'aventura-em-marte',
-      conteudos: 'Matemática',
-      ano: 'Ensino Fundamental',
-      link_jogo: 'https://www.escolagames.com.br/jogos/aventura-em-marte/'
-    },
-    {
-      nome: 'o-dia-que-o-tempo-parou',
-      conteudos: 'Matemática',
-      ano: 'Ensino Fundamental',
-      link_jogo: 'https://www.escolagames.com.br/jogos/o-dia-que-o-tempo-parou/'
-    },
-    {
-      nome: 'a-casa-abandonada',
-      conteudos: 'Matemática',
-      ano: 'Ensino Fundamental',
-      link_jogo: 'https://www.escolagames.com.br/jogos/a-casa-abandonada/'
-    }
-  ];
-
-  const jogoExisteStmt = db.prepare('SELECT id FROM jogos WHERE nome = ? AND categoria = ?');
-  const inserirJogoStmt = db.prepare(
-    'INSERT INTO jogos (nome, categoria, conteudos, ano, icone_url, link_jogo) VALUES (?, ?, ?, ?, ?, ?)'
-  );
-
-  jogosMatematicaIniciais.forEach((jogo) => {
-    const categoria = 'matematica';
-    const existe = jogoExisteStmt.get(jogo.nome, categoria);
-    if (!existe) {
-      inserirJogoStmt.run(
-        jogo.nome,
-        categoria,
-        jogo.conteudos,
-        jogo.ano,
-        null,
-        jogo.link_jogo
-      );
-    }
-  });
 } catch (error) {
   if (isDatabaseLockedError(error)) {
-    console.warn('Banco SQLite bloqueado na inicialização; aplicação continuará e tentará novamente sob demanda.');
+    console.warn('Banco SQLite bloqueado na inicialização; etapas de schema/seed foram ignoradas nesta inicialização.');
   } else {
     throw error;
   }
