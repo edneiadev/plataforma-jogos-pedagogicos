@@ -22,8 +22,15 @@ const db = {
   close:   ()     => _db.close(),
 };
 
+// Wait up to 5 s if another process holds the DB lock
+db.exec('PRAGMA busy_timeout = 5000');
+
 // Enable WAL mode for better concurrency
-db.exec('PRAGMA journal_mode = WAL');
+try {
+  db.exec('PRAGMA journal_mode = WAL');
+} catch (e) {
+  console.warn('WAL mode not set (continuing with default journal mode):', e.message);
+}
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS usuarios (
