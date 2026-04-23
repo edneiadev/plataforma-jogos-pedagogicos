@@ -1,0 +1,13 @@
+<%- include('partials/head', { title: 'Página não encontrada' }) %>
+<%- include('partials/navbar', { user: typeof user !== 'undefined' ? user : null }) %>
+
+<main class="container" style="text-align:center;padding-top:5rem">
+  <div style="font-size:4rem;margin-bottom:1rem">😕</div>
+  <h1 class="page-title">Página não encontrada</h1>
+  <p style="color:#777;margin-bottom:2rem">
+    A página que você está procurando não existe ou foi movida.
+  </p>
+  <a href="/" class="btn btn-primary">Voltar ao início</a>
+</main>
+
+<%- include('partials/footer') %>
